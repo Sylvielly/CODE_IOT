@@ -1,0 +1,41 @@
+#include <LiquidCrystal.h>
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+const int TMP36 = A0; // entrada analogica A0
+float temperatura;  // temperatura que será armazenada
+
+//configuracoes programa
+
+void setup() {
+    Serial.begin(9600);       // taxa de transmissao serial
+    pinMode(TMP36, INPUT);    //determina que o sensor seja uma entrada
+    pinMode(13, OUTPUT);      //determina que o LED seja uma saida      
+
+    lcd.begin(16, 2);
+    lcd.print("Temperatura lida = ");
+}
+
+//Loop
+
+void loop() {
+
+temperatura = ((float(analogRead(TMP36))*0.0048875855)-0.5)/0.01;    //converte valor de temperatura lida na porta analogica em graus
+      
+      lcd.setCursor(0, 1);            //posiciona cursor para escrever o valor de temperatura 
+      lcd.print("             ");     //escreve valor no display
+      lcd.setCursor(0, 1);            //posiciona cursor para escrever o valor de temperatura
+      lcd.print(temperatura);         //imprime para o usuario o valor de temperatura
+
+Serial.print("temperatura: ");      // Escreve na porta serial a palavra “Temperatura”
+Serial.println(temperatura);        // Escreve na porta serial a temperatura mensurada pelo sensor de temperatura TMP36 e armazenada na variável “temperatura”
+delay(1000);
+
+    if(temperatura < 10) {
+      digitalWrite(13, LOW);  
+      }
+
+    if(temperatura > 30) {
+      digitalWrite(13, HIGH);  
+      }
+
+}
